@@ -94,7 +94,7 @@ def main():
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 def tiktoken_len(text):
-    tokenizer = tiktoken.get_encoding("cl100k_base")
+    tokenizer = tiktoken.get_encoding("cl100k_base") #OpenAI의 토크나이저
     tokens = tokenizer.encode(text)
     return len(tokens)
 
