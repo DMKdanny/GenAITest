@@ -23,7 +23,7 @@ from langchain.memory import StreamlitChatMessageHistory
 def main():
     st.set_page_config(
     page_title="IRMED-GenAI Test",
-    page_icon=":medicine:")
+    page_icon=":rocket:")
 
     st.title("_Private Data :red[QA Chat]_ :books:")
 
