@@ -1,4 +1,5 @@
 import streamlit as st
+import oepnai
 import tiktoken #텍스트를 여려개의 청크로 나눌때 문자개수를 무엇으로 산정할것 -> 토큰수
 from loguru import logger #streamlit 웹사이트 상 구동했던 이력이 로그로 남게하기 위한 로거 라이브러리
 
