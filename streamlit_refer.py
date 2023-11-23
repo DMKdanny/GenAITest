@@ -15,7 +15,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter #텍스트를
 from langchain.embeddings import HuggingFaceEmbeddings #한국어에 특화된 임베딩 모델 채택
 
 from langchain.memory import ConversationBufferMemory #이전 대화를 몇개까지 기억할지 정함
-from langchain.vectorstores import FAISS #임시 백터 스토어
+from langchain.vectorstore import FAISS #임시 백터 스토어
 
 # 메모리를 구현하기 위한 추가적 라이브러리
 from langchain.callbacks import get_openai_callback
