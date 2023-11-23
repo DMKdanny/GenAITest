@@ -27,9 +27,11 @@ def main():
 
     st.title("_IRMED:red[보도자료 검색]_ :rocket:")
 
+    #Streamlit의 session_state.conversation 변수를 사용하기위한 선행 정의 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
 
+    #위의 세션과 마찬가지
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = None
 
@@ -40,6 +42,7 @@ def main():
         uploaded_files =  st.file_uploader("Upload your file",type=['pdf','docx'],accept_multiple_files=True)
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         process = st.button("Process")
+        
     if process:
         if not openai_api_key:
             st.info("Please add your OpenAI API key to continue.")
@@ -54,7 +57,7 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant", 
-                                        "content": "안녕하세요! 주어진 문서에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
+                                        "content": "안녕하세요! 업로드 된 보도자료에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -62,7 +65,7 @@ def main():
 
     history = StreamlitChatMessageHistory(key="chat_messages")
 
-    # Chat logic
+    # 채팅창 로직
     if query := st.chat_input("질문을 입력해주세요."):
         st.session_state.messages.append({"role": "user", "content": query})
 
