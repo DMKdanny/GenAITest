@@ -1,8 +1,8 @@
 import streamlit as st
-import tiktoken
-from loguru import logger
+import tiktoken #텍스트를 여려개의 청크로 나눌때 문자개수를 무엇으로 산정할것 -> 토큰수
+from loguru import logger #streamlit 웹사이트 상 구동했던 이력이 로그로 남게하기 위한 로거 라이브러리
 
-from langchain.chains import ConversationalRetrievalChain
+from langchain.chains import ConversationalRetrievalChain #메모리를 가지고 있는 체인이기에 Q&A가 아닌 Conversational 사용
 from langchain.chat_models import ChatOpenAI
 
 from langchain.document_loaders import PyPDFLoader
