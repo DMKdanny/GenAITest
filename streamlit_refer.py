@@ -25,7 +25,7 @@ def main():
     page_title="IRMED-GenAI Test",
     page_icon=":rocket:")
 
-    st.title("_Private Data :red[QA Chat]_ :rocket:")
+    st.title("_IRMED:red[보도자료 검색]_ :rocket:")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
