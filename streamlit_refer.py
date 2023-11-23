@@ -15,7 +15,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter #텍스트를
 from langchain.embeddings import HuggingFaceEmbeddings #한국어에 특화된 임베딩 모델 채택
 
 from langchain.memory import ConversationBufferMemory #이전 대화를 몇개까지 기억할지 정함
-from langchain.vectorstore import FAISS #임시 백터 스토어
+from langchain.vectorstores import FAISS #임시 백터 스토어
 
 # 메모리를 구현하기 위한 추가적 라이브러리
 from langchain.callbacks import get_openai_callback
@@ -50,7 +50,7 @@ def main():
             st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
-        vectorstore = get_vectorstore(text_chunks)
+        vectorstores = get_vectorstores(text_chunks)
      
         st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key) 
 
@@ -132,7 +132,7 @@ def get_text_chunks(text):
     return chunks
 
 
-def get_vectorstore(text_chunks):
+def get_vectorstores(text_chunks):
     embeddings = HuggingFaceEmbeddings(
                                         model_name="jhgan/ko-sroberta-multitask",
                                         model_kwargs={'device': 'cpu'},
@@ -141,7 +141,7 @@ def get_vectorstore(text_chunks):
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
 
-def get_conversation_chain(vectorstore, openai_api_key):
+def get_conversation_chain(vectorstores, openai_api_key):
     llm = ChatOpenAI(openai_api_key=openai_api_key, model_name = 'gpt-3.5-turbo',temperature=0)
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm, 
