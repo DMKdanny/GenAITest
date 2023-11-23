@@ -1,5 +1,6 @@
 import streamlit as st
 import openai
+import time
 import tiktoken  # 텍스트를 여러 개의 청크로 나눌 때 문자 개수를 무엇으로 산정할 것인가 -> 토큰 수
 from loguru import logger  # streamlit 웹사이트 상 구동했던 이력이 로그로 남게하기 위한 로거 라이브러리
 
@@ -42,7 +43,7 @@ def main():
     with st.sidebar:
         uploaded_files = st.file_uploader("파일을 업로드해주세요", type=['pdf', 'docx', 'ppt'], accept_multiple_files=True)
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
-        process = st.button("확인")
+        process = st.button("승인요청")
         
     if process:
         if not openai_api_key:
@@ -75,21 +76,31 @@ def main():
         with st.chat_message("assistant"):
             chain = st.session_state.conversation
 
-            with st.spinner("Thinking..."):
-                result = chain({"question": query})
-                with get_openai_callback() as cb:
-                    st.session_state.chat_history = result['chat_history']
-                response = result['answer']
-                source_documents = result['source_documents']
+            try:
+                with st.spinner("Thinking..."):
+                    result = query_chain(chain, query)
+                    response = result['answer']
+                    source_documents = result['source_documents']
+            except openai.RateLimitError:
+                handle_rate_limit_error()
+                response = "요청 한도 초과로 인해 질문을 처리할 수 없습니다. 잠시 후 다시 시도해주세요."
 
-                st.markdown(response)
+            st.markdown(response)
+            if 'source_documents' in locals():
                 with st.expander("참고 문서 확인"):
-                    st.markdown(source_documents[0].metadata['source'], help=source_documents[0].page_content)
-                    st.markdown(source_documents[1].metadata['source'], help=source_documents[1].page_content)
-                    st.markdown(source_documents[2].metadata['source'], help=source_documents[2].page_content)
+                    for doc in source_documents:
+                        st.markdown(doc.metadata['source'], help=doc.page_content)
 
         # Add assistant message to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
+
+def query_chain(chain, query):
+    return chain({"question": query})
+
+def handle_rate_limit_error():
+    retry_interval = 60  # 재시도 간격 (예: 60초)
+    st.error("요청 한도를 초과했습니다. 잠시 후에 다시 시도해 주세요.")
+    time.sleep(retry_interval)
 
 def tiktoken_len(text):
     tokenizer = tiktoken.get_encoding("cl100k_base")  # OpenAI의 토크나이저
