@@ -42,7 +42,7 @@ def main():
     with st.sidebar:
         uploaded_files = st.file_uploader("파일을 업로드해주세요", type=['pdf', 'docx', 'ppt'], accept_multiple_files=True)
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
-        process = st.button("승인요청")
+        process = st.button("확인")
         
     if process:
         if not openai_api_key:
